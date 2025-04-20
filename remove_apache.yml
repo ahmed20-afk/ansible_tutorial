@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+
+    - name: install apache2 package
+      dnf:
+        name: httpd
+        state: absent
+
+    - name: install php for apache2
+      dnf:
+        name: php.x86_64
+        state: absent
