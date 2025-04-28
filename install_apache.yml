@@ -4,18 +4,20 @@
   become: true
   tasks:
 
-
-    - name: update repository index
-      dnf:
+    - name: update and install apache2 and php packages for CentOs
+      package:
+        name: 
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
+        state: latest
         update_cache: yes
+        when: ansible_distribution == "CentOs"
 
-
-    - name: install apache2 package
-      dnf:
-        name: httpd
+    - name: update and install apache2 and php packages for CentOs
+      package:
+        name:
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
         state: latest
-
-    - name: install php for apache2
-      dnf:
-        name: php.x86_64
-        state: latest
+        update_cache: yes
+        when: ansible_distribution == "Ubuntu"

@@ -1,3 +1,6 @@
-server1@192.168.175.131
-server2@192.168.175.132
-server3@192.168.175.133
+[web_servers]
+server1@192.168.175.131 apache_package=httpd php_package=php
+[db_servers]
+server2@192.168.175.132 apache_package=httpd php_package=php
+[file_servers]
+server3@192.168.175.133 apache_package=httpd php_package=php
