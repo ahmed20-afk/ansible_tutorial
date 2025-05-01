@@ -4,3 +4,5 @@ server1@192.168.175.131 apache_package=httpd php_package=php
 server2@192.168.175.132 apache_package=httpd php_package=php
 [file_servers]
 server3@192.168.175.133 apache_package=httpd php_package=php
+[workstations]
+server3@192.168.175.133

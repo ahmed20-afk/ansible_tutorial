@@ -10,9 +10,9 @@
         name:
           - httpd
           - php
-        update_only: yes
         update_cache: yes
-      when: ansible_distribution == "CentOs"
+        changed_when: false
+      when: ansible_distribution == "CentOS"
 
     - name: install updates(Ubuntu)
       tags: always
@@ -20,9 +20,35 @@
         name:
           - apache2
           - php
-        upgrade: dist
         update_cache: yes
+        changed_when: false
       when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: add ssh key for simon
+      tags: always
+      authorized_key:
+        user: simon
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBOHj4Gc7lkH33PUCWX2KPgfzMuTS7PZxvcMYzl8sliH ansible"
+
+- hosts: workstations
+  become: true
+  tasks:
+    - name: install unzip
+      package:
+        name: unzip
+
+    - name: install terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
 
 - hosts: web_servers
   become: true
@@ -36,7 +62,7 @@
           - php
         state: latest
         update_cache: yes
-      when: ansible_distribution == "CentOs"
+      when: ansible_distribution == "CentOS"
 
     - name: update and install apache2 and php packages for CentOs
       tags: apache,apache2,centos
@@ -48,6 +74,14 @@
         update_cache: yes
       when: ansible_distribution == "Ubuntu"
     
+    - name: start httpd (CentOs)
+      tags: apache,centos,httpd
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_distribution == "CentOS"
+
     - name: copy default html file for site
       tags: apache,apache2,httpd
       copy:
@@ -67,7 +101,7 @@
       dnf:
         name: mariadb.x86_64
         state: latest
-      when: ansible_distribution == "CentOs"
+      when: ansible_distribution == "CentOS"
 
 
     - name: install maria package(Ubuntu)
@@ -85,3 +119,6 @@
       package:
         name: samba
         state: latest
+
+
+
